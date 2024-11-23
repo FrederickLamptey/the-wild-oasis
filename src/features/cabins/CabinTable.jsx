@@ -32,7 +32,7 @@ function CabinTable() {
 
   //useQuery is a hook that allows us to fetch the data from the remote source(supabase)
   const {isLoading, data: cabins, error,} = useQuery({
-    queryKey: ["cabin"],
+    queryKey: ["cabins"],
     queryFn: getCabins,
   })
 
