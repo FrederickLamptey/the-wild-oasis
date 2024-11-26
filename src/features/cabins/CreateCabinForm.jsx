@@ -47,8 +47,13 @@ function CreateCabinForm() {
 
   const { register, handleSubmit } = useForm(); //This hook is used to manage the inputs
 
+  //function that will be called with the data from the form by the event handler(handleSubmit).
+  function handleOnSubmit(data) {
+    console.log(data);
+  }
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit(handleOnSubmit)}>
       <FormRow>
         <Label htmlFor="name">Cabin name</Label>
         <Input type="text" id="name" {...register("name")} />
@@ -84,7 +89,7 @@ function CreateCabinForm() {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button>Edit cabin</Button>
+        <Button>Add cabin</Button>
       </FormRow>
     </Form>
   );
