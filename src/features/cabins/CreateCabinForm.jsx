@@ -51,7 +51,6 @@ function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm(); //This hook is used to manage the inputs
   const { errors } = formState;
 
-
   const queryClient = useQueryClient();
 
   const { mutate, isLoading: isCreating } = useMutation({
@@ -66,7 +65,7 @@ function CreateCabinForm() {
 
   //function that will be called with the data from the form by the event handler(handleSubmit).
   function handleOnSubmit(data) {
-    mutate(data);
+    mutate({...data, image: data.image[0]});
   }
 
   //function that will be called if any of the required fields aren't provided with data.
@@ -140,7 +139,11 @@ function CreateCabinForm() {
 
       <FormRow>
         <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register('image', { required: 'This field is required' })}
+        />
       </FormRow>
 
       <FormRow>
