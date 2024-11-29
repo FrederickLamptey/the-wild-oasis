@@ -7,9 +7,8 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 import FormRow from '../../ui/FormRow';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createEditCabin } from '../../services/apiCabins';
-import toast from 'react-hot-toast';
+import { useCreateCabin } from './useCreateCabin';
+import { useEditCabin } from './useEditCabin';
 
 const Label = styled.label`
   font-weight: 500;
@@ -23,44 +22,41 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   // NB: The useForm hook must know this!
   const isEditSession = Boolean(editedId);
 
-  const { register, handleSubmit, reset, getValues, formState } = useForm(
-    {defaultValues: isEditSession ? editedValues : {},}
-  ); //This hook is used to manage the inputs
+  const { register, handleSubmit, reset, getValues, formState } = useForm({
+    defaultValues: isEditSession ? editedValues : {},
+  }); //This hook is used to manage the inputs
   const { errors } = formState;
 
-  const queryClient = useQueryClient();
+  const { isCreating, createCabin } = useCreateCabin();
+  const { editCabin, isEditing } = useEditCabin()
 
-  const { mutate: createCabin, isLoading: isCreating } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      toast.success('New cabin successfully created');
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      reset();
-    },
-    onError: (err) => toast.error(err.message),
-  });
 
-    const { mutate: editCabin, isLoading: isEditing } = useMutation({
-      mutationFn: ({newCabinData, id}) => createEditCabin(newCabinData, id),
-      onSuccess: () => {
-        toast.success('Cabin successfully edited');
-        queryClient.invalidateQueries({ queryKey: ['cabins'] });
-        reset();
-      },
-      onError: (err) => toast.error(err.message),
-    });
-  
   const isWorking = isCreating || isEditing;
 
   //function that will be called with the data from the form by the event handler(handleSubmit).
   function handleOnSubmit(data) {
-    const image = typeof data.image === "string" ? data.image : data.image[0];
+    const image = typeof data.image === 'string' ? data.image : data.image[0];
     // console.log(data);
     // mutate({ ...data, image: data.image[0] });
 
     if (isEditSession)
-      editCabin({ newCabinData: { ...data, image }, id: editedId });
-    else createCabin({...data, image: image})
+      editCabin(
+        { newCabinData: { ...data, image }, id: editedId },
+        {
+          onSuccess: (data) => {
+            reset();
+          },
+        }
+      );
+    else
+      createCabin(
+        { ...data, image: image },
+        {
+          onSuccess: (data) => {
+            reset();
+          },
+        }
+      );
   }
 
   //function that will be called if any of the required fields aren't provided with data.
@@ -137,7 +133,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         <FileInput
           id="image"
           accept="image/*"
-          {...register('image', { required: isEditSession? false : 'This field is required' })}
+          {...register('image', {
+            required: isEditSession ? false : 'This field is required',
+          })}
         />
       </FormRow>
 
@@ -146,7 +144,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isWorking}>{isEditSession ? "Edit cabin": "Create new cabin"}</Button>
+        <Button disabled={isWorking}>
+          {isEditSession ? 'Edit cabin' : 'Create new cabin'}
+        </Button>
       </FormRow>
     </Form>
   );
