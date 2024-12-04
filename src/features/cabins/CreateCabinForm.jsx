@@ -14,7 +14,7 @@ const Label = styled.label`
   font-weight: 500;
 `;
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onClose }) {
   const { id: editedId, ...editedValues } = cabinToEdit;
 
   // This will the useForm hook know whether we are creating or editing.
@@ -45,6 +45,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         {
           onSuccess: (data) => {
             reset();
+            onClose?.();
           },
         }
       );
@@ -54,6 +55,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         {
           onSuccess: (data) => {
             reset();
+            onClose?.();
           },
         }
       );
@@ -141,7 +143,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={() => onClose?.()}>
           Cancel
         </Button>
         <Button disabled={isWorking}>
