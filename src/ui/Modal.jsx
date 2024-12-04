@@ -55,11 +55,18 @@ function Modal({ children, onClose }) {
   return createPortal(
     <Overlay>
       <StyledModal>
-        <Button onClick={onClose}><HiXMark /></Button>
+        <Button onClick={onClose}>
+          <HiXMark />
+        </Button>
         <div>{children}</div>
       </StyledModal>
-    </Overlay>, document.body
+    </Overlay>,
+    document.body
   );
 }
+
+//NB: I used the createPortal to place the modal directly under the body in the dom because of reusability.
+//This is because I don't it to be affected by a different developer's css style property set to overflow hidden if used.
+//This will however, not change the position of it in the component tree. 
 
 export default Modal;
