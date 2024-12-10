@@ -9,7 +9,6 @@ import ConfirmDelete from '../../ui/ConfirmDelete';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
 
-
 // const TableRow = styled.div`
 //   display: grid;
 //   grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
@@ -116,9 +115,11 @@ function CabinRow({ cabin }) {
         <Menus.Menu>
           <Menus.Toggle id={cabinId} />
           <Menus.List id={cabinId}>
-            <Menus.Button>Duplicate</Menus.Button>
-            <Menus.Button>Edit</Menus.Button>
-            <Menus.Button>Delete</Menus.Button>
+            <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+              Duplicate
+            </Menus.Button>
+            <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+            <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
           </Menus.List>
         </Menus.Menu>
       </div>
