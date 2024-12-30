@@ -8,20 +8,23 @@ import { useLogin } from './useLogin';
 import SpinnerMini from '../../ui/SpinnerMini';
 
 function LoginForm() {
-  const [email, setEmail] = useState('odlamptey47@gmail.com');
-  const [password, setPassword] = useState('password@123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { login, isLoading } = useLogin();
 
   function handleSubmit(e) {
     e.preventDefault();
     if (!email || !password) return;
 
-    login({ email, password }, {
-      onSettled: () => {
-        setEmail("");
-        setPassword("")
+    login(
+      { email, password },
+      {
+        onSettled: () => {
+          setEmail('');
+          setPassword('');
+        },
       }
-    });
+    );
   }
 
   return (
@@ -49,7 +52,7 @@ function LoginForm() {
       </FormRowVertical>
       <FormRowVertical>
         <Button size="large" disabled={isLoading}>
-         {!isLoading? "Login" : <SpinnerMini />}
+          {!isLoading ? 'Login' : <SpinnerMini />}
         </Button>
       </FormRowVertical>
     </Form>
